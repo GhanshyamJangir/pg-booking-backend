@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PG Owner Panel</title>
+  <style>
+    body{font-family:Arial;margin:16px;max-width:900px}
+    .row{display:flex;gap:8px;flex-wrap:wrap}
+    input,button{padding:10px;font-size:16px}
+    .card{border:1px solid #ddd;border-radius:10px;padding:12px;margin:10px 0}
+    .muted{color:#666}
+    .btn{cursor:pointer}
+    .btnA{background:#0a7;border:none;color:#fff;border-radius:8px}
+    .btnR{background:#d33;border:none;color:#fff;border-radius:8px}
+  </style>
+</head>
+<body>
+  <h2>PG Owner Panel (MVP)</h2>
+
+  <div class="row">
+    <input id="ownerId" type="number" placeholder="Owner User ID (e.g. 1)" />
+    <button class="btn" onclick="loadBookings()">Load Pending Bookings</button>
+    <button class="btn" onclick="location.reload()">Reset</button>
+  </div>
+
+  <p class="muted">Note: Abhi OTP nahi. Owner User ID se pending bookings load honge.</p>
+
+  <div id="status"></div>
+  <div id="list"></div>
+
+<script>
+  const statusEl = document.getElementById("status");
+  const listEl = document.getElementById("list");
+
+  async function loadBookings(){
+    const ownerId = document.getElementById("ownerId").value.trim();
+    if(!ownerId){ alert("Owner User ID dalo"); return; }
+
+    statusEl.textContent = "Loading...";
+    listEl.innerHTML = "";
+
+    try{
+      const res = await fetch(`/api/owner/bookings/${ownerId}`);
+      const json = await res.json();
+      if(!res.ok) throw new Error(JSON.stringify(json));
+
+      const data = json.data || [];
+      statusEl.textContent = `Pending: ${data.length}`;
+
+      if(data.length === 0){
+        listEl.innerHTML = "<p>No pending bookings</p>";
+        return;
+      }
+
+      data.forEach(b => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <b>${b.pg_name || "PG"}</b><br/>
+          User: ${b.user_name || "-"} | Gender: ${b.gender || "-"}<br/>
+          Room: ${b.room_type || "-"}<br/>
+          Type: ${b.booking_type}<br/>
+          Dates: ${b.start_date} → ${b.end_date || "Unlimited"}<br/>
+          <hr/>
+          Rent: ₹${b.rent_amount}<br/>
+          Deposit: ₹${b.deposit_amount} (fixed)<br/>
+          Platform Fee: ₹${b.platform_fee} (fixed)<br/>
+          <b>Total: ₹${b.total_amount}</b>
+          <div class="row" style="margin-top:10px">
+            <button class="btn btnR" onclick="rejectBooking(${b.id})">Reject</button>
+            <button class="btn btnA" onclick="acceptBooking(${b.id})">Accept</button>
+          </div>
+        `;
+        listEl.appendChild(card);
+      });
+
+    }catch(e){
+      statusEl.textContent = "Error: " + e.message;
+    }
+  }
+
+  async function acceptBooking(id){
+    if(!confirm("Accept booking?")) return;
+    const res = await fetch(`/api/owner/bookings/${id}/accept`, { method:"POST" });
+    const json = await res.json().catch(()=> ({}));
+    if(!res.ok){ alert("Accept failed: " + JSON.stringify(json)); return; }
+    alert("Accepted ✅");
+    loadBookings();
+  }
+
+  async function rejectBooking(id){
+    const reason = prompt("Reject reason (required):");
+    if(!reason || reason.trim().length < 2) return;
+
+    const res = await fetch(`/api/owner/bookings/${id}/reject`, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({ reason: reason.trim() })
+    });
+    const json = await res.json().catch(()=> ({}));
+    if(!res.ok){ alert("Reject failed: " + JSON.stringify(json)); return; }
+    alert("Rejected ❌ (refund triggered)");
+    loadBookings();
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+:root { color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: ui-sans-serif, system-ui, Arial; background:#0b0f14; color:#e8eef6; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 18px; }
+
+.top { display:flex; gap:16px; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; }
+h1 { margin:0; font-size: 26px; }
+.muted { color:#a9b4c0; margin:6px 0 0; }
+.small { font-size: 12px; }
+
+.controls { display:flex; gap:10px; align-items:center; }
+input {
+  padding: 10px 12px; border-radius: 10px; border:1px solid #263243;
+  background:#0f1621; color:#e8eef6; min-width: 220px;
+}
+button {
+  padding: 10px 12px; border-radius: 10px; border:1px solid #263243;
+  background:#121b27; color:#e8eef6; cursor:pointer;
+}
+button:disabled { opacity: .6; cursor:not-allowed; }
+
+.bar { margin-top: 16px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+.bar input { flex:1; min-width: 280px; }
+.pill { border:1px solid #263243; background:#0f1621; padding: 10px 12px; border-radius: 999px; }
+
+.error {
+  margin-top: 14px; border:1px solid #7a2f2f; background:#251114;
+  padding: 12px; border-radius: 12px;
+}
+.empty { margin-top: 20px; border:1px dashed #263243; padding: 18px; border-radius: 14px; color:#a9b4c0; }
+
+.grid { margin-top: 16px; display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 900px){ .grid { grid-template-columns: 1fr; } }
+
+.card {
+  border:1px solid #263243; background:#0f1621; border-radius: 16px; padding: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+.cardTop { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+.title { font-weight: 700; font-size: 16px; }
+.badge { font-size: 12px; padding: 6px 10px; border-radius: 999px; border:1px solid #263243; background:#121b27; }
+
+.row2 { margin-top: 10px; display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.kv .k { color:#a9b4c0; font-size: 12px; margin-bottom: 4px; }
+.kv .v { font-size: 14px; }
+
+hr { border: none; border-top:1px solid #1f2a39; margin: 12px 0; }
+
+.money { display:grid; gap: 6px; }
+.total { margin-top: 4px; font-size: 15px; }
+
+.actions { margin-top: 12px; display:flex; gap:10px; }
+.primary { background:#1663ff; border-color:#2a65ff; }
+.danger { background:#c53a3a; border-color:#d04a4a; }
+
+.foot { margin-top: 18px; color:#7f8a96; font-size: 12px; }
+code { background:#121b27; padding:2px 6px; border-radius: 6px; border:1px solid #263243; }
