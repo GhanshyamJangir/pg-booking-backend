@@ -19,7 +19,8 @@ const router = express.Router();
 
 // multer setup (all screenshots/photos)
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, path.join(__dirname, ".", "uploads")),
+  // ✅ FIX: save into project-root /uploads (NOT src/uploads)
+  destination: (req, file, cb) => cb(null, path.join(__dirname, "..", "uploads")),
   filename: (req, file, cb) => {
     const safe = String(file.originalname || "file").replace(/[^a-zA-Z0-9._-]/g, "_");
     cb(null, `${Date.now()}_${safe}`);
