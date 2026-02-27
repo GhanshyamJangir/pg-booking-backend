@@ -261,8 +261,6 @@ exports.createPgWithPhotos = async (req, res) => {
     const owner = (await db.query(`SELECT id FROM owners WHERE user_id=$1`, [ownerUserId])).rows[0];
     if (!owner) return res.status(400).json({ error: "owner profile not found" });
 
-<<<<<<< HEAD
-=======
     // ✅ Max 3 PG per owner
     const existingCount = (await db.query(
       `SELECT COUNT(*)::int AS cnt FROM pgs WHERE owner_id=$1`,
@@ -272,7 +270,6 @@ exports.createPgWithPhotos = async (req, res) => {
       return res.status(400).json({ error: "Maximum 3 PG allowed per owner" });
     }
 
->>>>>>> 7ac08a3 (Fix API base + max 3 PG limit)
     const files = Array.isArray(req.files) ? req.files : [];
     if (files.length < 10 || files.length > 20) {
       return res.status(400).json({ error: "photos required: min 10 max 20" });
