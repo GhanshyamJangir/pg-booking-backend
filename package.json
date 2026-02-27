@@ -25,4 +25,3 @@
     "nodemon": "^3.1.11"
   }
 }
-"deploy": "gh-pages -d dist -r https://github.com/GhanshyamJangir/pg-owner-app.git"
